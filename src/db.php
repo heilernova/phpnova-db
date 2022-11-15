@@ -41,7 +41,7 @@ class db
     public static function query(string $sql, array $params = null): Result
     {
         try {
-            return self::getConnection()->command($sql, $params);
+            return self::getConnection()->query($sql, $params);
         } catch (\Throwable $th) {
             return new ErrorDatabase($th);
         }
