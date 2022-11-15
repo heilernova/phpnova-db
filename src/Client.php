@@ -1,6 +1,8 @@
 <?php
 namespace Phpnova\Database;
 
+use DateTime;
+use DateTimeZone;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -34,6 +36,14 @@ class Client
     public function setTimezone(string $timezone): void
     {
         try {
+            if (strlen($timezone) == 4 && preg_match('/[\+,\-]\d{2}:\d{2}/', $timezone)) {
+                try {
+                    $timezone = (new DateTime('now', new DateTimeZone($timezone)))->format('P');
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
+            }
+
             if ($this->config['driver']) {
                 $sql = "SET TIME_ZONE = '$timezone'";
                 $this->pdo->exec($sql);
