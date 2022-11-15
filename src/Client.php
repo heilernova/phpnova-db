@@ -36,7 +36,7 @@ class Client
     public function setTimezone(string $timezone): void
     {
         try {
-            if (strlen($timezone) == 4 && preg_match('/[\+,\-]\d{2}:\d{2}/', $timezone)) {
+            if (!strlen($timezone) == 4 || !preg_match('/[\+,\-]\d{2}:\d{2}/', $timezone)) {
                 try {
                     $timezone = (new DateTime('now', new DateTimeZone($timezone)))->format('P');
                 } catch (\Throwable $th) {
