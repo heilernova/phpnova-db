@@ -1,0 +1,26 @@
+{
+    "name": "phpnova/db",
+    "description": "Libraría para el manejo de consulta con bases de datos MYSQL y PostgreSQL",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "autoload": {
+        "psr-4": {
+            "Phpnova\\Database\\": "src/"
+        },
+        "files": [
+            "src/Funcs/_functions.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Heile Nova",
+            "homepage": "https://www.novaccode.com/",
+            "email": "info@novaccode.com",
+            "rule": "developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0"
+    }
+}
