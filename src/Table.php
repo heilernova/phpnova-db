@@ -20,8 +20,8 @@ class Table
     public function get(string $condition, ?array $params = null): ?object
     {
         try {
-            $sql = "SELECT * FROM `$this->table` WHERE $condition";
-            return $this->client->query($sql, [$params])->rows[0] ?? null;
+            $sql = "SELECT * FROM `$this->table` WHERE $condition LIMIT 1";
+            return $this->client->query($sql, $params)->rows[0] ?? null;
         } catch (\Throwable $th) {
             throw new ErrorDatabase($th);
         }
@@ -33,7 +33,8 @@ class Table
     public function getAll(string $condition = null, ?array $params = null): array
     {
         $sql = "SELECT * FROM `$this->table`";
-        return $this->client->query($sql)->rows;
+        if ($condition) $sql = " WHERE $condition";
+        return $this->client->query($sql, $params)->rows;
     }
 
     public function insert(array $values, string $returning = null): bool|object
@@ -128,7 +129,7 @@ class Table
     public function delete(string $condition, ?array $params = null): int
     {
         try {
-            $res = $this->client->query("DELETE FROM $this->table WHERE $condition", $params);
+            $res = $this->client->query("DELETE FROM `$this->table` WHERE $condition", $params);
             return $res->rowCount;
         } catch (\Throwable $th) {
             throw new ErrorDatabase($th);
