@@ -71,7 +71,7 @@ class Table
         }
     }
 
-    public function update(array $values, string $condition, ?array $params = null)
+    public function update(array $values, string $condition, ?array $params = null): Result
     {
         try {
             $table = $this->table;

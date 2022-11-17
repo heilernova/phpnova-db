@@ -49,6 +49,10 @@ class db
 
     public static function table(string $name): Table
     {
-        return self::getConnection()->table($name);
+        try {
+            return self::getConnection()->table($name);
+        } catch (\Throwable $th) {
+            throw new ErrorDatabase($th);
+        }
     }
 }
