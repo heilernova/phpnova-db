@@ -33,7 +33,7 @@ class Table
     public function getAll(string $condition = null, ?array $params = null): array
     {
         $sql = "SELECT * FROM `$this->table`";
-        if ($condition) $sql = " WHERE $condition";
+        if ($condition) $sql .= " WHERE $condition";
         return $this->client->query($sql, $params)->rows;
     }
 

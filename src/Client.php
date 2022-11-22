@@ -13,6 +13,7 @@ class Client
     private PDO $pdo;
     private Table $table;
     private array $config = [];
+    private ClientConfig $_config;
 
     public function __construct(PDO $pdo, array $config = [])
     {
@@ -20,6 +21,7 @@ class Client
         $config = array_merge(['driver' => $pdo->getAttribute($pdo::ATTR_DRIVER_NAME)], $config);
         
         $this->config = $config;
+        $this->_config = new ClientConfig($this->config);
         
         # Validamos la configuración
         if (array_key_exists('timezone', $config)) {
@@ -29,8 +31,8 @@ class Client
         $this->table = new Table($this);
     }
 
-    public function getConfig(): array {
-        return $this->config;
+    public function getConfig(): ClientConfig {
+        return $this->_config;
     }
 
     public function setTimezone(string $timezone): void
