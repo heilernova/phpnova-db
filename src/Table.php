@@ -46,7 +46,7 @@ class Table
             $values_sql = "";
             $params = [];
             foreach ($values as $key => $val) {
-                $write_style = $this->client->getConfig()['writing_style']['queries'] ?? null;
+                $write_style = $this->client->getConfig()->getWritengStyleQuery();
                 if ($write_style) {
                     $key = $write_style == 'snakecase' ? nv_db_parse_camelcase_to_snakecase($key) : nv_db_parse_snakecase_to_camelcase($key);
                 }
@@ -80,7 +80,7 @@ class Table
             $sql_parms = [];
 
             foreach($values as $key => $val) {
-                $write_style = $this->client->getConfig()['writing_style']['queries'] ?? null;
+                $write_style = $this->client->getConfig()->getWritengStyleQuery();
                 if ($write_style) {
                     $key = $write_style == 'snakecase' ? nv_db_parse_camelcase_to_snakecase($key) : nv_db_parse_snakecase_to_camelcase($key);
                 }

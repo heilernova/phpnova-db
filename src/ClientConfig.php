@@ -27,4 +27,11 @@ class ClientConfig
         if ($style != "camelcase" && $style != "snakecase") throw new ErrorDatabase("El parametro ingresado solo pude ser 'camelcase' o 'snakecase' no [$style]");
         $this->config['writing_style']['queries'] = $style;
     }
+    /**
+     * @param 'camelcase'|'snakecase'
+     */
+    public function getWritengStyleQuery(): ?string
+    {
+        return $this->config['writing_style']['queries'] ?? null;
+    }
 }
