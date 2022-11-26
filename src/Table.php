@@ -2,6 +2,9 @@
 
 namespace Phpnova\Database;
 
+/**
+ * @author Heiler Nova <https://github.com/heilernova>
+ */
 class Table
 {
     private string $table = "";
@@ -17,6 +20,11 @@ class Table
         }
     }
 
+    /**
+     * @param string $condition Data condition, whithout !WHERE¡
+     * @param ?array $params Condition parameters
+     * @return object|null Returns the first result of the query or null if there are no results.
+     */
     public function get(string $condition, ?array $params = null): ?object
     {
         try {
@@ -28,15 +36,25 @@ class Table
     }
 
     /**
-     * @return object[]
+     * @param ?string $condition Condition for the data result, whithout !WHERE¡
+     * @param ?array $params Condition parameters
+     * @return object[] Returns an array of objects with the information of each row
      */
     public function getAll(string $condition = null, ?array $params = null): array
     {
-        $sql = "SELECT * FROM `$this->table`";
-        if ($condition) $sql .= " WHERE $condition";
-        return $this->client->query($sql, $params)->rows;
+        try {
+            $sql = "SELECT * FROM `$this->table`";
+            if ($condition) $sql .= " WHERE $condition";
+            return $this->client->query($sql, $params)->rows;
+        } catch (\Throwable $th) {
+            throw new ErrorDatabase($th);
+        }
     }
 
+    /**
+     * Execute a data insert
+     * @param array $values Associative array of data to insert
+     */
     public function insert(array $values, string $returning = null): bool|object
     {
         try {
@@ -71,6 +89,12 @@ class Table
         }
     }
 
+    /**
+     * Run a update
+     * @param array $values Associative array of data to update
+     * @param string $condition Condition to update the data, whithout !WHERE¡
+     * @param ?array $params Condition parameters
+     */
     public function update(array $values, string $condition, ?array $params = null): Result
     {
         try {
@@ -124,7 +148,10 @@ class Table
     }
 
     /**
-     * Returns the number of rows deleted
+     * Run a delete
+     * @param string $condition Condition to delete the data whithout !WHERE¡
+     * @param ?array $params Condition parameters
+     * @return int Number of rows delete
      */
     public function delete(string $condition, ?array $params = null): int
     {
