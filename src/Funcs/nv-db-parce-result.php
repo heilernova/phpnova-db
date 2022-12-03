@@ -17,7 +17,7 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, array $config)
             if ($config['driver'] == 'mysql') {
                 if ($native_type == 'NEWDECIMAL'){
                     $value = (float)$value;
-                } else if ($native_type == 'BLOB' || $native_type == 'VAR_STRING'){
+                } else if ($native_type == 'BLOB' || $native_type == 'VAR_STRING' || $native_type == 'MEDIUM_BLOB'){
                     if (is_string($value)){
                         if ( preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0){
                             $json = json_decode($value);
