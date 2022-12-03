@@ -43,7 +43,7 @@ class db
         try {
             return self::getConnection()->query($sql, $params);
         } catch (\Throwable $th) {
-            return new ErrorDatabase($th);
+            throw new ErrorDatabase($th);
         }
     }
 
