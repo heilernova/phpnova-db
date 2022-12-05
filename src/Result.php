@@ -19,10 +19,9 @@ class Result
         });
 
         $fields = [];
-        foreach(range(0, $stmt->columnCount() - 1) as $column_index)
-        {
-            $meta = $stmt->getColumnMeta($column_index);
-            $fields[] = $meta['name'];
+        for ($i = 0; $i < $stmt->columnCount(); $i++) { 
+            $meta = $stmt->getColumnMeta($i);
+            if ($meta) $fields[] = $meta['name'];
         }
 
         $this->fields = $fields;
