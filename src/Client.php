@@ -84,6 +84,11 @@ class Client
         return false;
     }
 
+    public function getPDO(): PDO
+    {
+        return $this->pdo;
+    }
+
     public function query(string $sql, array $params = null)
     {
         try {
