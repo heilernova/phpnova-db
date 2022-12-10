@@ -1,22 +1,40 @@
 <?php
 
 use Phpnova\Database\db;
-
 require __DIR__ . '/../vendor/autoload.php';
+#error_reporting(0);
+
+try {
+    
+    $conn = db::connect()->mysql('root', '', 'la_casa_imperial');
+
+    db::connections()->register('la_casa_imperial', $conn);
+    db::connections()->getDefault();
+
+    // db::connections()->default();
+    // $result = $conn->config->getTimezone();
+    // $conn->config->setWritingStyleResultFields('camelcase');
+    $result = $conn->table("tb_admin_users")->getAll();
+
+    
+    // $conection =  new DBConnection(null);
+
+    // $conection->config->
+
+    // $conection->beginTransaction();
+    // $conection->commid();
 
 
-// $pdo = db::connect()->mysql('root', '', 'la_casa_imperial');
+  # Impirmimos el resultado en formato JSON
+  header('content-type: application/json');
+  echo json_encode($result, 128);
 
+} catch (\Throwable $th) {
+    //throw $th;
 
-// db::registerConnection('test', $pdo);
-$client = db::connect()->mysql('root', '', 'la_casa_imperial', timezone: '-05:00');
-
-// // $res = $client->table('tb_persons')->insert(['dni' => '10027244088', 'type' => 1], '*');
-// $res = $client->table('tb_persons')->update(['type' => 0], 'dni = ?', ['1007244088']);
-// $res = $client->table('tb_persons')->delete('dni = ?', ['1007244088']);
-
-$res = db::table('tb_persons')->getAll();
-
-header('content-type: application/json');
-
-echo json_encode($res);
+    header('content-type: text/plain');
+    echo "Error\n";
+    echo $th->getMessage();
+    echo "\n" . $th->getFile();
+    echo "\n" . $th->getLine();
+}
