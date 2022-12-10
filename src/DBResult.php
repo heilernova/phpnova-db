@@ -3,15 +3,22 @@ namespace Phpnova\Database;
 
 use PDO;
 use PDOStatement;
+use Phpnova\Database\Settings\ConnectionConfig;
 
-class Result
+class DBResult
 {
     public readonly array $fields;
+
     /** Number of affected rows */
     public readonly int $rowCount;
+
+    /**
+     * Query result
+     * @var object[]
+     * */
     public readonly array $rows;
 
-    public function __construct(PDOStatement $stmt , array $config)
+    public function __construct(PDOStatement $stmt , ConnectionConfig  $config)
     {
         $this->rowCount = $stmt->rowCount();
         $this->rows = $stmt->fetchAll(PDO::FETCH_FUNC, function() use ($stmt, $config) {

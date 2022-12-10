@@ -4,55 +4,38 @@ namespace Phpnova\Database;
 
 use Exception;
 use PDO;
-use Phpnova\Database\Connect;
+use Phpnova\Database\Settings\Connect;
+use Phpnova\Database\Settings\Connections;
 
 class db
 {
-    private static Client|null $default = null;
-    private static array $connections = [];
+    private static Connections $connections;
+    private static Connect $connect;
 
     public static function connect(): Connect
     {
-        return new Connect();
+        return self::$connect;
     }
 
-    public static function registerConnection(string $name, Client $client): void
+    public static function connections(): Connections
     {
-        self::$connections[$name] = $client;
+        return self::$connections;
     }
 
-    public static function setConnection(Client $client): void 
+    public static function __callStatic($name, $arguments)
     {
-        self::$default = $client;
-    }
-
-    public static function getConnection(string $name = null): Client
-    {
-        if ($name && array_key_exists($name, self::$connections)) {
-            throw new ErrorDatabase( new Exception("No se entro la conexión [$name] en el registro"));
-        }
-
-        if (is_null(self::$default)) throw new ErrorDatabase(new Exception('No se ha establecido una conexión por defecto'));
-
-        return self::$default;
-    }
-
-    
-    public static function query(string $sql, array $params = null): Result
-    {
-        try {
-            return self::getConnection()->query($sql, $params);
-        } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
-        }
-    }
-
-    public static function table(string $name): Table
-    {
-        try {
-            return self::getConnection()->table($name);
-        } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+        switch ($name) {
+            case "setConnection":
+                self::$connections = $arguments[0];
+                return;
+            case "setConnect":
+                self::$connect = $arguments[0];
+                return;
+            default:
+                throw new DBError("Método estatico no soportado");
         }
     }
 }
+
+db::setConnection(new Connections());
+db::setConnect(new Connect());

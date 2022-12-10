@@ -5,10 +5,10 @@ namespace Phpnova\Database;
 /**
  * @author Heiler Nova <https://github.com/heilernova>
  */
-class Table
+class DBTable
 {
     private string $table = "";
-    public function __construct(private Client $client)
+    public function __construct(private DBConnection $conn)
     {
         
     }
@@ -29,9 +29,9 @@ class Table
     {
         try {
             $sql = "SELECT * FROM `$this->table` WHERE $condition LIMIT 1";
-            return $this->client->query($sql, $params)->rows[0] ?? null;
+            return $this->conn->query($sql, $params)->rows[0] ?? null;
         } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+            throw new DBError($th);
         }
     }
 
@@ -45,15 +45,16 @@ class Table
         try {
             $sql = "SELECT * FROM `$this->table`";
             if ($condition) $sql .= " WHERE $condition";
-            return $this->client->query($sql, $params)->rows;
+            return $this->conn->query($sql, $params)->rows;
         } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+            throw new DBError($th);
         }
     }
 
     /**
      * Execute a data insert
      * @param array $values Associative array of data to insert
+     * @param string $returning Check if the version of the database engine used supports it
      */
     public function insert(array $values, string $returning = null): bool|object
     {
@@ -64,7 +65,7 @@ class Table
             $values_sql = "";
             $params = [];
             foreach ($values as $key => $val) {
-                $write_style = $this->client->getConfig()->getWritengStyleQuery();
+                $write_style = $this->conn->config->getWritingStyleQueryFields();
                 if ($write_style) {
                     $key = $write_style == 'snakecase' ? nv_db_parse_camelcase_to_snakecase($key) : nv_db_parse_snakecase_to_camelcase($key);
                 }
@@ -82,10 +83,10 @@ class Table
             $values_sql = ltrim($values_sql, ', ');
             $fields = ltrim($fields, ', ');
 
-            $res = $this->client->query("INSERT INTO $table($fields) VALUES($values_sql)" . ($returning ? " RETURNING $returning"  : "") , $params);
+            $res = $this->conn->query("INSERT INTO $table($fields) VALUES($values_sql)" . ($returning ? " RETURNING $returning"  : "") , $params);
             return $res->rows[0] ?? true;
         } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+            throw new DBError($th);
         }
     }
 
@@ -95,7 +96,7 @@ class Table
      * @param string $condition Condition to update the data, whithout !WHERE¡
      * @param ?array $params Condition parameters
      */
-    public function update(array $values, string $condition, ?array $params = null): Result
+    public function update(array $values, string $condition, ?array $params = null): DBResult
     {
         try {
             $table = $this->table;
@@ -104,7 +105,7 @@ class Table
             $sql_parms = [];
 
             foreach($values as $key => $val) {
-                $write_style = $this->client->getConfig()->getWritengStyleQuery();
+                $write_style = $this->conn->config->getWritingStyleQueryFields();
                 if ($write_style) {
                     $key = $write_style == 'snakecase' ? nv_db_parse_camelcase_to_snakecase($key) : nv_db_parse_snakecase_to_camelcase($key);
                 }
@@ -138,12 +139,12 @@ class Table
                 $sql_condition_params["pw_$key"] = $val;
             }
             
-            $res = $this->client->query("UPDATE `$table` SET $sql_values WHERE $sql_condition", array_merge($sql_parms, $sql_condition_params));
+            $res = $this->conn->query("UPDATE `$table` SET $sql_values WHERE $sql_condition", array_merge($sql_parms, $sql_condition_params));
 
             return $res;
 
         } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+            throw new DBError($th);
         }
     }
 
@@ -156,10 +157,10 @@ class Table
     public function delete(string $condition, ?array $params = null): int
     {
         try {
-            $res = $this->client->query("DELETE FROM `$this->table` WHERE $condition", $params);
+            $res = $this->conn->query("DELETE FROM `$this->table` WHERE $condition", $params);
             return $res->rowCount;
         } catch (\Throwable $th) {
-            throw new ErrorDatabase($th);
+            throw new DBError($th);
         }
     }
 }
