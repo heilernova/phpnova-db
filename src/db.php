@@ -2,8 +2,6 @@
 
 namespace Phpnova\Database;
 
-use Exception;
-use PDO;
 use Phpnova\Database\Settings\Connect;
 use Phpnova\Database\Settings\Connections;
 
@@ -20,6 +18,24 @@ class db
     public static function connections(): Connections
     {
         return self::$connections;
+    }
+
+    public static function query(string $sql, array $params): DBResult
+    {
+        try {
+            return self::$connections->getDefault()->query($sql, $params);
+        } catch (\Throwable $th) {
+            throw new DBError($th);
+        }
+    }
+
+    public static function table(string $name): DBTable
+    {
+        try {
+            return self::$connections->getDefault()->table($name);
+        } catch (\Throwable $th) {
+            throw new DBError($th);
+        }
     }
 
     public static function __callStatic($name, $arguments)
