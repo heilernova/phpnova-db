@@ -6,7 +6,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 try {
     
-    $conn = db::connect()->mysql('root', '', 'la_casa_imperial');
+    $conn = db::connect()->mysql('root', '', 'mundo_adhesivos');
 
     db::connections()->register('la_casa_imperial', $conn);
     db::connections()->getDefault();
@@ -14,7 +14,7 @@ try {
     // db::connections()->default();
     // $result = $conn->config->getTimezone();
     // $conn->config->setWritingStyleResultFields('camelcase');
-    $result = $conn->table("tb_admin_users")->getAll();
+    $result = $conn->table("vi_purchase_orders")->getAll();
 
     
     // $conection =  new DBConnection(null);

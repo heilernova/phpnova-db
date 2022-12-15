@@ -16,7 +16,7 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
             if ($native_type == 'NEWDECIMAL'){
                 $value = (float)$value;
             }
-            else if (is_string($value) && preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0){ #($native_type == 'BLOB' || $native_type == 'VAR_STRING' || $native_type == 'MEDIUM_BLOB' || 'LONG_BLOB')
+            else if (is_string($value) && (preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0)){ #($native_type == 'BLOB' || $native_type == 'VAR_STRING' || $native_type == 'MEDIUM_BLOB' || 'LONG_BLOB')
                 $json = json_decode($value);
                 if (json_last_error() == JSON_ERROR_NONE){
                     $value = $json;
