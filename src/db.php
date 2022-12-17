@@ -20,7 +20,7 @@ class db
         return self::$connections;
     }
 
-    public static function query(string $sql, array $params): DBResult
+    public static function query(string $sql, ?array $params = null): DBResult
     {
         try {
             return self::$connections->getDefault()->query($sql, $params);
