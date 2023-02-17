@@ -18,10 +18,10 @@ class Connect
     /**
      * Crea una conexión PDO a MYSQL con los parametros ingresado
      */
-    public function mysql(string $username, string $password, string $database, string $hostname = 'localhost', string $port = null, ?string $timezone = null): DBConnection
+    public function mysql(string $username, string $password, string $database, string $hostname = 'localhost', string $port = null, ?string $timezone = null, ?array $options = null): DBConnection
     {
         try {
-            return $this->setDefault(new PDO("mysql:host=$hostname; dbname=$database;" . ($port ? " port=$port;" : ''), $username, $password), $timezone);
+            return $this->setDefault(new PDO("mysql:host=$hostname; dbname=$database;" . ($port ? " port=$port;" : ''), $username, $password, $options), $timezone);
         } catch (\Throwable $th) {
             throw new DBError($th);
         }
@@ -30,10 +30,10 @@ class Connect
     /**
      * Crea una conexión PDO a PostgreSQL con los parametros ingresados
      */
-    public function postgreSQL(string $username, string $password, string $database, string $hostname = 'localhost', $port = null, ?string $timezone = null): DBConnection
+    public function postgreSQL(string $username, string $password, string $database, string $hostname = 'localhost', $port = null, ?string $timezone = null, ?array $options = null): DBConnection
     {
         try {
-            return $this->setDefault(new PDO("pgsql:host=$hostname; dbname=$database;" . ($port ? " port=$port;" : ''), $username, $password), $timezone);
+            return $this->setDefault(new PDO("pgsql:host=$hostname; dbname=$database;" . ($port ? " port=$port;" : ''), $username, $password, $options), $timezone);
         } catch (\Throwable $th) {
             throw new DBError($th);
         }

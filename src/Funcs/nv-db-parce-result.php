@@ -11,13 +11,12 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
     foreach ($values as $index => $value) {
         $column_meta = $stmt->getColumnMeta($index);
         $native_type = $column_meta['native_type'];
-        // if ($column_meta['name'] == 'client') echo  $native_type . "\n";
         if ($config->getDriver() == 'mysql') {
             if ($native_type == 'NEWDECIMAL'){
                 $value = (float)$value;
             }
-            else if (is_string($value) && (preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0)){ #($native_type == 'BLOB' || $native_type == 'VAR_STRING' || $native_type == 'MEDIUM_BLOB' || 'LONG_BLOB')
-                $json = json_decode($value);
+            else if (is_string($value) && (preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0)){
+                $json = json_decode($value, true);
                 if (json_last_error() == JSON_ERROR_NONE){
                     $value = $json;
                 }
@@ -30,7 +29,7 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
             }
 
             if ($native_type == 'json'){
-                $value = json_decode($value);
+                $value = json_decode($value, true);
             }
         }
 
@@ -40,5 +39,5 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
 
         $params[$name_field] = $value;
     }
-    return (object)$params;
+    return $params;
 }

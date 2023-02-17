@@ -82,4 +82,22 @@ class DBConnection
         $this->table->setTableName($name);
         return $this->table;
     }
+
+    public function function(string $name, ?array $params = null): mixed
+    {
+        try {
+            $res = $this->query("SELECT $name", $params)->rows[0];
+            return current($res);    
+        } catch(\Throwable $th){
+            throw new DBError($th);
+        }
+    }
+    public function procedure(string $name, ?array $params = null): DBResult
+    {
+        try {
+            return $this->query("CALL $name", $params);
+        } catch(\Throwable $th){
+            throw new DBError($th);
+        }
+    }
 }

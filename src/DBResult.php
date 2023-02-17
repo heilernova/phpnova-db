@@ -13,8 +13,8 @@ class DBResult
     public readonly int $rowCount;
 
     /**
-     * Query result
-     * @var object[]
+     * Returns an array with the result of the rows in an associated array
+     * @var array[]
      * */
     public readonly array $rows;
 
