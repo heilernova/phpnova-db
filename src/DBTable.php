@@ -56,7 +56,7 @@ class DBTable
      * @param array $values Associative array of data to insert
      * @param string $returning Check if the version of the database engine used supports it
      */
-    public function insert(array $values, string $returning = null): bool|object
+    public function insert(array $values, string $returning = null): bool|array
     {
         try {
             $table = $this->table;
