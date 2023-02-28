@@ -23,9 +23,9 @@ class DBTable
     /**
      * @param string $condition Data condition, whithout !WHERE¡
      * @param ?array $params Condition parameters
-     * @return array|null Returns the first result of the query or null if there are no results.
+     * @return object|null Returns the first result of the query or null if there are no results.
      */
-    public function get(string $condition, ?array $params = null): ?array
+    public function get(string $condition, ?array $params = null): ?object
     {
         try {
             $sql = "SELECT * FROM `$this->table` WHERE $condition LIMIT 1";
@@ -38,7 +38,7 @@ class DBTable
     /**
      * @param ?string $condition Condition for the data result, whithout !WHERE¡
      * @param ?array $params Condition parameters
-     * @return array[] Returns an array of objects with the information of each row
+     * @return object[] Returns an array of objects with the information of each row
      */
     public function getAll(string $condition = null, ?array $params = null): array
     {
@@ -56,7 +56,7 @@ class DBTable
      * @param array $values Associative array of data to insert
      * @param string $returning Check if the version of the database engine used supports it
      */
-    public function insert(array $values, string $returning = null): bool|array
+    public function insert(array $values, string $returning = null): bool|object
     {
         try {
             $table = $this->table;

@@ -16,7 +16,7 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
                 $value = (float)$value;
             }
             else if (is_string($value) && (preg_match('/^\{?.+\}/', $value) > 0 || preg_match('/^\[?.+\]/', $value ) > 0)){
-                $json = json_decode($value, true);
+                $json = json_decode($value);
                 if (json_last_error() == JSON_ERROR_NONE){
                     $value = $json;
                 }
@@ -29,7 +29,7 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
             }
 
             if ($native_type == 'json'){
-                $value = json_decode($value, true);
+                $value = json_decode($value);
             }
         }
 
@@ -39,5 +39,5 @@ function nv_db_parce_result(array $values, PDOStatement $stmt, ConnectionConfig 
 
         $params[$name_field] = $value;
     }
-    return $params;
+    return (object)$params;
 }
