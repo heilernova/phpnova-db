@@ -1,6 +1,8 @@
 <?php
 namespace Phpnova\Database\Settings;
 
+use PDO;
+use Phpnova\Database\db;
 use Phpnova\Database\DBConnection;
 use Phpnova\Database\DBError;
 
@@ -35,11 +37,24 @@ class Connections
         }
     }
 
-    public function register($name, DBConnection $connection): void
+    /** 
+     * Register a connection to be used
+     * @param string $name Name that is assigned to the connection for its future call
+     * @param DBConnection|PDO Connection, can be a previously created connection with a PDO object
+    */
+    public function register(string $name, DBConnection|PDO $connection): void
     {
+        if ($connection instanceof PDO){
+            $connection = db::connect()->pdo($connection);
+        }
         $this->connections[$name] = $connection;
     }
 
+    /**
+     * Establishes the default conection to perform SQL queries
+     * @param string $name Connection name
+     * @throws DBError Returns an error in case the connection name is not found in the registry
+     */
     public function setDefault(string $name): void
     {
         if (!array_key_exists($name, $this->connections)) throw new DBError("No es entro la conexón [$name] en el registro");

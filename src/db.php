@@ -20,6 +20,16 @@ class db
         return self::$connections;
     }
 
+    /**
+     * Execute a SQL query on the database
+     * @author Heiler Nova <https://github.com/heilernova>
+     * @param string $sql SQL command to execute
+     * @param array|null $params Query parameters
+     * @return DBresult Returns a class with the results of the SQL query
+     * @example => db:query("SELECT * FROM tabel WHERE id = 1");
+     * @example => db::query("SELECT * FROM tabel WHERE id = ?", [1]);
+     * @example => db::query("SELECT * FROM tabel WHERE id = :id", ["id" => 1]);
+     */
     public static function query(string $sql, ?array $params = null): DBResult
     {
         try {
